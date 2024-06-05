@@ -117,6 +117,13 @@ function love.load()
     gameState = 'start'
 end
 
+function Paddle:updateAI(ball)
+    if ball.dy < 0 then 
+        self.y = math.max (0, ball.y + (ball.height / 2) - (self.height / 2))
+    else 
+        self.y = math.min (VIRTUAL_HEIGHT - self.height, ball.y + (ball.height / 2) - (self.height / 2))
+    end
+end 
 --[[
     Called whenever we change the dimensions of our window, as by dragging
     out its bottom corner, for example. In this case, we only need to worry
@@ -238,13 +245,7 @@ function love.update(dt)
     end
 
     -- player 2
-    if love.keyboard.isDown('up') then
-        player2.dy = -PADDLE_SPEED
-    elseif love.keyboard.isDown('down') then
-        player2.dy = PADDLE_SPEED
-    else
-        player2.dy = 0
-    end
+  
 
     -- update our ball based on its DX and DY only if we're in play state;
     -- scale the velocity by dt so movement is framerate-independent
@@ -253,7 +254,7 @@ function love.update(dt)
     end
 
     player1:update(dt)
-    player2:update(dt)
+    player2:updateAI(ball)
 end
 
 --[[
